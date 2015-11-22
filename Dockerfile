@@ -2,7 +2,7 @@ FROM isuper/java-oracle
 MAINTAINER Stefan Lehmann <stefan.lehmann@unic.com>
 
 # hybris needs unzip and lsof for the solr server setup
-RUN apt-get update && apt-get install -y unzip lsof ca-certificates curl && apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y unzip lsof && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # grab gosu for easy step-down from root
 RUN gpg --keyserver pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4
