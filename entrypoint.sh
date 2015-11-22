@@ -4,26 +4,26 @@ export DOCKER_CONTAINER_IP=$(ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?
 
 if [ "$1" = 'run' ]; then
 
-	if [ ! -d "/home/hybris/bin" ]; then
+    if [ ! -d "/home/hybris/bin" ]; then
         
-		cd /home/hybris
-  	    
-		# unzip the artifacts created by production ant target 
-	    echo "Unzipping hybris production archives ..."
-		for z in hybrisServer*.zip; do unzip $z -d /home ; done
-		
-		# add container ip to cluster configuration of hybris instance
-		echo "cluster.broadcast.method.jgroups.tcp.bind_addr=$DOCKER_CONTAINER_IP" >> config/local.properties
-		
-	fi
+        cd /home/hybris
+        
+        # unzip the artifacts created by production ant target 
+        echo "Unzipping hybris production archives ..."
+        for z in hybrisServer*.zip; do unzip $z -d /home ; done
+        
+        # add container ip to cluster configuration of hybris instance
+        echo "cluster.broadcast.method.jgroups.tcp.bind_addr=$DOCKER_CONTAINER_IP" >> config/local.properties
+        
+    fi
 
-	cd ${PLATFORM_HOME}
+    cd ${PLATFORM_HOME}
 
-	chown -R hybris /home/hybris
-	chmod +x hybrisserver.sh
-	
-	# run hybris commerce suite as user hybris
-	exec gosu hybris ./hybrisserver.sh $@
+    chown -R hybris /home/hybris
+    chmod +x hybrisserver.sh
+    
+    # run hybris commerce suite as user hybris
+    exec gosu hybris ./hybrisserver.sh $@
 
 fi
 
