@@ -37,3 +37,12 @@ If you want you can copy unzipped content too, but this will bloat the images yo
 
 	# copy the build packages over
 	COPY hybrisServer*.zip /home/hybris/
+
+#### Hint
+
+As the image is not prepared for recompiling the hybris platform inside a container please get sure to build with following parameter in your ``local.properties`` to avoid hardcoded paths in your config artifact:
+
+	
+	## https://wiki.hybris.com/display/release5/ant+production+improvements#antproductionimprovements-withoutAntHowtorunhybrisserveronproductionenvironmentwithoutneedtocallanyanttarget
+	## for docker we need to use the PLATFORM_HOME environment variable instead of absolute paths in server*.xml files and wrapper*.conf files
+	production.legacy.mode=false
