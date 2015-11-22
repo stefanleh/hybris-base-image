@@ -1,5 +1,7 @@
 ### hybris-base-image
 
+[![](https://badge.imagelayers.io/stefanlehmann/hybris-base-image:latest.svg)](https://imagelayers.io/?images=stefanlehmann/hybris-base-image:latest 'Get your own badge on imagelayers.io')
+
 A base image for Hybris Commerce Suite, based on [isuper/java-oracle](https://hub.docker.com/r/isuper/java-oracle/).
 
 Can be used Out-Of-The-Box for projects based on Hybris Commerce Suite >5.5.
