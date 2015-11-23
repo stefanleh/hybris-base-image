@@ -2,7 +2,7 @@
 
 [![](https://badge.imagelayers.io/stefanlehmann/hybris-base-image:latest.svg)](https://imagelayers.io/?images=stefanlehmann/hybris-base-image:latest 'Get your own badge on imagelayers.io')
 
-A base image for Hybris Commerce Suite, based on [isuper/java-oracle](https://hub.docker.com/r/isuper/java-oracle/).
+A base image for Hybris Commerce Suite, based on **ubuntu:latest**.
 
 Can be used Out-Of-The-Box for projects based on Hybris Commerce Suite >5.5.
 
@@ -13,12 +13,9 @@ The image on [DockerHub](https://hub.docker.com/r/stefanlehmann/hybris-base-imag
 * [gosu](https://github.com/tianon/gosu)
 * lsof
 * unzip
-
-##### from isuper/java-oracle
-
 * ca-certificates 
 * curl 
-* oracle java 8
+* oracle java 8 (server jre 8u66b17)
 
 #### User
 hybris:hybris (with uid 1000)
