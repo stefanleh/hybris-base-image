@@ -16,16 +16,16 @@ if [ "$1" = 'run' ]; then
         echo "cluster.broadcast.method.jgroups.tcp.bind_addr=$DOCKER_CONTAINER_IP" >> config/local.properties
         
         # add database properties passed as environment variables
-        if [ ! -z "$HYBRIS_DB_URL"]; then
+        if [ ! -z "$HYBRIS_DB_URL" ]; then
             echo "db.url=$HYBRIS_DB_URL" >> config/local.properties
         fi
-        if [ ! -z "$HYBRIS_DB_DRIVER"]; then
+        if [ ! -z "$HYBRIS_DB_DRIVER" ]; then
             echo "db.driver=$HYBRIS_DB_DRIVER" >> config/local.properties
         fi
-        if [ ! -z "$HYBRIS_DB_USER"]; then
+        if [ ! -z "$HYBRIS_DB_USER" ]; then
             echo "db.username=$HYBRIS_DB_USER" >> config/local.properties
         fi
-        if [ ! -z "$HYBRIS_DB_PASSWORD"]; then
+        if [ ! -z "$HYBRIS_DB_PASSWORD" ]; then
             echo "db.password=$HYBRIS_DB_PASSWORD" >> config/local.properties
         fi
         
