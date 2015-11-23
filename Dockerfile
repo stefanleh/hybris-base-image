@@ -1,9 +1,29 @@
-FROM isuper/java-oracle
+FROM ubuntu:latest
 MAINTAINER Stefan Lehmann <stefan.lehmann@unic.com>
 
-# hybris needs unzip and lsof for the solr server setup
-RUN apt-get update && apt-get install -y unzip lsof && apt-get clean && rm -rf /var/lib/apt/lists/*
+ENV VERSION 8
+ENV UPDATE 66
+ENV BUILD 17
 
+ENV JAVA_HOME /usr/lib/jvm/java-${VERSION}-oracle
+ENV JRE_HOME ${JAVA_HOME}/jre
+
+# hybris needs unzip and lsof for the solr server setup
+RUN apt-get update && apt-get install ca-certificates curl unzip lsof -y && \
+        curl --silent --location --retry 3 --cacert /etc/ssl/certs/GeoTrust_Global_CA.pem \
+        --header "Cookie: oraclelicense=accept-securebackup-cookie;" \
+        http://download.oracle.com/otn-pub/java/jdk/"${VERSION}"u"${UPDATE}"-b"${BUILD}"/server-jre-"${VERSION}"u"${UPDATE}"-linux-x64.tar.gz \
+        | tar xz -C /tmp && \
+        mkdir -p /usr/lib/jvm && mv /tmp/jdk1.${VERSION}.0_${UPDATE} "${JAVA_HOME}" && \
+        apt-get autoclean && apt-get --purge -y autoremove && \
+        rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# set oracle jre as default java
+RUN update-alternatives --install "/usr/bin/java" "java" "${JRE_HOME}/bin/java" 1 && \
+        update-alternatives --install "/usr/bin/javac" "javac" "${JAVA_HOME}/bin/javac" 1 && \
+        update-alternatives --set java "${JRE_HOME}/bin/java" && \
+        update-alternatives --set javac "${JAVA_HOME}/bin/javac"
+        
 # grab gosu for easy step-down from root
 RUN gpg --keyserver pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4
 RUN curl -o /usr/local/bin/gosu -SL "https://github.com/tianon/gosu/releases/download/1.2/gosu-$(dpkg --print-architecture)" \
