@@ -37,6 +37,18 @@ If you want you can copy unzipped content too, but this will bloat the images yo
 	# copy the build packages over
 	COPY hybrisServer*.zip /home/hybris/
 
+#### Configuration support
+
+For support of different database configurations per container the following environment variables can be set when starting a container.
+They will be used to add the properties in second column to ``local.properties`` file.
+
+| Environment variable | local.properties                |
+|----------------------|---------------------------------|
+| HYBRIS_DB_URL        | db.url=$HYBRIS_DB_URL           |
+| HYBRIS_DB_DRIVER     | db.driver=$HYBRIS_DB_DRIVER     |
+| HYBRIS_DB_USER       | db.username=$HYBRIS_DB_USER     |
+| HYBRIS_DB_PASSWORD   | db.password=$HYBRIS_DB_PASSWORD |
+
 #### Hint
 
 As the image is not intended for recompiling the hybris platform inside a container please get sure to build with following parameter in your ``local.properties`` to avoid hardcoded paths in your config artifact:
