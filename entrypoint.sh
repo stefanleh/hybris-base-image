@@ -29,6 +29,11 @@ if [ "$1" = 'run' ]; then
             echo "db.password=$HYBRIS_DB_PASSWORD" >> config/local.properties
         fi
         
+        # add datahub properties passed as environment variables
+        if [ ! -z "$HYBRIS_DATAHUB_URL" ]; then
+            echo "datahubadapter.datahuboutbound.url=$HYBRIS_DATAHUB_URL" >> config/local.properties
+        fi
+        
     fi
 
     cd ${PLATFORM_HOME}
