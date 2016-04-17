@@ -35,7 +35,7 @@ RUN set -x \
     && gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
     && rm -r "$GNUPGHOME" /usr/local/bin/gosu.asc \
     && chmod +x /usr/local/bin/gosu \
-    && gosu nobody true \
+    && gosu nobody true
 
 # set the PLATFORM_HOME environment variable used by hybris
 ENV PLATFORM_HOME=/home/hybris/bin/platform/
