@@ -5,11 +5,13 @@ ENV VERSION 8
 ENV UPDATE 77
 ENV BUILD 03
 
+ENV GOSU_VERSION 1.7
+
 ENV JAVA_HOME /usr/lib/jvm/java-${VERSION}-oracle
 ENV JRE_HOME ${JAVA_HOME}/jre
 
 # hybris needs unzip and lsof for the solr server setup
-RUN apt-get update && apt-get install ca-certificates curl unzip lsof -y && \
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl unzip lsof wget && \
         curl --silent --location --retry 3 --cacert /etc/ssl/certs/GeoTrust_Global_CA.pem \
         --header "Cookie: oraclelicense=accept-securebackup-cookie;" \
         http://download.oracle.com/otn-pub/java/jdk/"${VERSION}"u"${UPDATE}"-b"${BUILD}"/server-jre-"${VERSION}"u"${UPDATE}"-linux-x64.tar.gz \
@@ -25,12 +27,15 @@ RUN update-alternatives --install "/usr/bin/java" "java" "${JRE_HOME}/bin/java" 
         update-alternatives --set javac "${JAVA_HOME}/bin/javac"
         
 # grab gosu for easy step-down from root
-RUN gpg --keyserver pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4
-RUN curl -o /usr/local/bin/gosu -SL "https://github.com/tianon/gosu/releases/download/1.2/gosu-$(dpkg --print-architecture)" \
-    && curl -o /usr/local/bin/gosu.asc -SL "https://github.com/tianon/gosu/releases/download/1.2/gosu-$(dpkg --print-architecture).asc" \
-    && gpg --verify /usr/local/bin/gosu.asc \
-    && rm /usr/local/bin/gosu.asc \
-    && chmod +x /usr/local/bin/gosu
+RUN set -x \
+    && wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture)" \
+    && wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture).asc" \
+    && export GNUPGHOME="$(mktemp -d)" \
+    && gpg --keyserver ha.pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 \
+    && gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
+    && rm -r "$GNUPGHOME" /usr/local/bin/gosu.asc \
+    && chmod +x /usr/local/bin/gosu \
+    && gosu nobody true \
 
 # set the PLATFORM_HOME environment variable used by hybris
 ENV PLATFORM_HOME=/home/hybris/bin/platform/
