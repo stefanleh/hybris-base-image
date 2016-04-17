@@ -23,6 +23,9 @@ hybris:hybris (with uid 1000)
 #### Ports
 The image exposes ``9001`` and ``9002`` for access to the hybris Tomcat server via HTTP and HTTPS.
 
+#### Volumes
+The hybris home directory `/home/hybris` is marked as volume.
+
 #### How to add your code
 
 Using a Dockerfile you can copy the output of ``ant production`` into the hybris home directory of the image.
@@ -49,6 +52,19 @@ They will be used to add the properties in second column to ``local.properties``
 | HYBRIS_DB_USER       | db.username=$HYBRIS_DB_USER    						|
 | HYBRIS_DB_PASSWORD   | db.password=$HYBRIS_DB_PASSWORD 						|
 | HYBRIS_DATAHUB_URL   | datahubadapter.datahuboutbound.url=$HYBRIS_DATAHUB_URL |
+
+#### How to use
+
+As this image is just a base for running SAP Hybris you need to either copy your own production artefacts in and commit the result as your own image or mount a directory containing them.
+For the latter no own images are needed.
+
+##### Using hybris artefacts copied into image
+
+	docker run -d --name HYBRIS_CONTAINER_NAME -p HOST_HTTP_PORT:9001 -p HOST_HTTPS_PORT:9002 REGISTRY/IMAGE:VERSION
+
+##### Using hybris artefacts in directory on Docker host
+
+	docker run -d --name HYBRIS_CONTAINER_NAME -p HOST_HTTP_PORT:9001 -p HOST_HTTPS_PORT:9002 -v /PATH/TO/hybris:/home/hybris stefanlehmann/hybris-base-image:latest
 
 #### Hint
 
