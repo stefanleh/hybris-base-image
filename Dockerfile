@@ -2,8 +2,8 @@ FROM ubuntu:latest
 MAINTAINER Stefan Lehmann <stefan.lehmann@unic.com>
 
 ENV VERSION 8
-ENV UPDATE 73
-ENV BUILD 02
+ENV UPDATE 77
+ENV BUILD 03
 
 ENV JAVA_HOME /usr/lib/jvm/java-${VERSION}-oracle
 ENV JRE_HOME ${JAVA_HOME}/jre
