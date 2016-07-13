@@ -22,6 +22,7 @@ hybris:hybris (with uid 1000)
 
 #### Ports
 The image exposes ``9001`` and ``9002`` for access to the hybris Tomcat server via HTTP and HTTPS.
+
 Also the default Solr server port ``8983`` is exposed for accessing the solr admin webinterface.
 
 #### Volumes
