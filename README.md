@@ -24,6 +24,7 @@ hybris:hybris (with uid 1000)
 The image exposes ``9001`` and ``9002`` for access to the hybris Tomcat server via HTTP and HTTPS.
 
 Also the default Solr server port ``8983`` is exposed for accessing the solr admin webinterface.
+> Please be aware that in non dev environments the Solr server(s) should run in own container(s).
 
 #### Volumes
 The hybris home directory `/home/hybris` is marked as volume.
@@ -54,6 +55,12 @@ They will be used to add the properties in second column to ``local.properties``
 | HYBRIS_DB_USER       | db.username=$HYBRIS_DB_USER    						|
 | HYBRIS_DB_PASSWORD   | db.password=$HYBRIS_DB_PASSWORD 						|
 | HYBRIS_DATAHUB_URL   | datahubadapter.datahuboutbound.url=$HYBRIS_DATAHUB_URL |
+
+##### Clustering
+
+
+For easy clustering the [entrypoint-script](entrypoint.sh) adds the property ``cluster.broadcast.method.jgroups.tcp.bind_addr`` with currently used container-IP-adress to `local.properties`.
+Please be aware that this only happens on first start of the container, so when you restart the container and maybe get another ip this can lead to not working clustering.
 
 #### How to use
 
