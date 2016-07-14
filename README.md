@@ -57,6 +57,12 @@ They will be used to add the properties in second column to ``local.properties``
 | HYBRIS_DB_PASSWORD   | db.password=$HYBRIS_DB_PASSWORD 						|
 | HYBRIS_DATAHUB_URL   | datahubadapter.datahuboutbound.url=$HYBRIS_DATAHUB_URL |
 
+##### Clustering
+
+
+For easy clustering the [entrypoint-script](entrypoint.sh) adds the property ``cluster.broadcast.method.jgroups.tcp.bind_addr`` with currently used container-IP-adress to `local.properties`.
+Please be aware that this only happens on first start of the container, so when you restart the container and maybe get another ip this can lead to not working clustering.
+
 #### How to use
 
 As this image is just a base for running SAP Hybris you need to either copy your own production artefacts in and commit the result as your own image or mount a directory containing them.
