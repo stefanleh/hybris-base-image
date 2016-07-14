@@ -24,6 +24,8 @@ hybris:hybris (with uid 1000)
 The image exposes ``9001`` and ``9002`` for access to the hybris Tomcat server via HTTP and HTTPS.
 
 Also the default Solr server port ``8983`` is exposed for accessing the solr admin webinterface.
+> Please be aware that in non dev environments the Solr server(s) should run in own container(s).
+
 
 #### Volumes
 The hybris home directory `/home/hybris` is marked as volume.
