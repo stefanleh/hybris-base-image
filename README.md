@@ -6,7 +6,7 @@ Can be used Out-Of-The-Box for projects based on Hybris Commerce Suite >5.5.
 
 The image on [DockerHub](https://hub.docker.com/r/stefanlehmann/hybris-base-image/ "DockerHub") is built automatically from the Dockerfile here.
 
-[![](https://images.microbadger.com/badges/image/stefanlehmann/centos-jenkins-docker-slave.svg)](https://microbadger.com/#/images/stefanlehmann/centos-jenkins-docker-slave "Get your own image badge on microbadger.com")
+[![](https://images.microbadger.com/badges/image/stefanlehmann/hybris-base-image.svg)](https://microbadger.com/#/images/stefanlehmann/hybris-base-image "Get your own image badge on microbadger.com")
 
 #### Installed packages
 
