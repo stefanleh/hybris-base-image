@@ -5,7 +5,7 @@ ENV VERSION 8
 ENV UPDATE 111
 ENV BUILD 14
 
-ENV GOSU_VERSION 1.7
+ENV GOSU_VERSION 1.9
 
 ENV JAVA_HOME /usr/lib/jvm/java-${VERSION}-oracle
 ENV JRE_HOME ${JAVA_HOME}/jre
@@ -25,11 +25,12 @@ RUN update-alternatives --install "/usr/bin/java" "java" "${JRE_HOME}/bin/java" 
     && update-alternatives --install "/usr/bin/javac" "javac" "${JAVA_HOME}/bin/javac" 1 \
     && update-alternatives --set java "${JRE_HOME}/bin/java" \
     && update-alternatives --set javac "${JAVA_HOME}/bin/javac"
-        
+
 # grab gosu for easy step-down from root
 RUN set -x \
-    && wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture)" \
-    && wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture).asc" \
+    && dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')" \
+    && wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch" \
+    && wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch.asc" \
     && export GNUPGHOME="$(mktemp -d)" \
     && gpg --keyserver ha.pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 \
     && gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
@@ -40,7 +41,7 @@ RUN set -x \
 # set the PLATFORM_HOME environment variable used by hybris
 ENV PLATFORM_HOME=/home/hybris/bin/platform/
 ENV PATH=$PLATFORM_HOME:$PATH
-    
+
 # add hybris user
 RUN useradd -d /home/hybris -u 1000 -m -s /bin/bash hybris
 
