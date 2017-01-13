@@ -31,9 +31,7 @@ The hybris home directory `/home/hybris` is marked as volume.
 
 #### How to add your code
 
-Using a Dockerfile you can copy the output of ``ant production`` into the hybris home directory of the image.
-
-The entrypoint script will unzip them when the container starts.
+Using a Dockerfile you can copy the output archives, generated using ``ant production``, into the hybris home directory of the image. The [entrypoint-script](entrypoint.sh) will unzip them when the container starts.
 
 If you want you can copy unzipped content too, but this will bloat the images you push to your own repository.
 
@@ -56,8 +54,9 @@ They will be used to add the properties in second column to ``local.properties``
 | HYBRIS_DB_PASSWORD   | db.password=$HYBRIS_DB_PASSWORD 						|
 | HYBRIS_DATAHUB_URL   | datahubadapter.datahuboutbound.url=$HYBRIS_DATAHUB_URL |
 
-##### Clustering
+Of course you can also build with defaults like ``db.url=jdbc:mysql://database-container/database?useConfigs=maxPerformance&characterEncoding=utf8`` in your ``local.properties`` and use the linking functionality of docker to inject the correct container name which should be mapped to ``database-container``.
 
+##### Clustering
 
 For easy clustering the [entrypoint-script](entrypoint.sh) adds the property ``cluster.broadcast.method.jgroups.tcp.bind_addr`` with currently used container-IP-adress to `local.properties`.
 Please be aware that this only happens on first start of the container, so when you restart the container and maybe get another ip this can lead to not working clustering.
