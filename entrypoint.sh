@@ -5,16 +5,16 @@ export DOCKER_CONTAINER_IP=$(ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?
 if [ "$1" = 'run' ]; then
 
     if [ ! -d "/home/hybris/bin" ]; then
-        
+
         cd /home/hybris
-        
-        # unzip the artifacts created by production ant target 
+
+        # unzip the artifacts created by production ant target
         echo "Unzipping hybris production archives ..."
         for z in hybrisServer*.zip; do unzip $z -d /home ; done
-        
+
         # add container ip to cluster configuration of hybris instance
         echo "cluster.broadcast.method.jgroups.tcp.bind_addr=$DOCKER_CONTAINER_IP" >> config/local.properties
-        
+
         # add database properties passed as environment variables
         if [ ! -z "$HYBRIS_DB_URL" ]; then
             echo "db.url=$HYBRIS_DB_URL" >> config/local.properties
@@ -28,12 +28,12 @@ if [ "$1" = 'run' ]; then
         if [ ! -z "$HYBRIS_DB_PASSWORD" ]; then
             echo "db.password=$HYBRIS_DB_PASSWORD" >> config/local.properties
         fi
-        
+
         # add datahub properties passed as environment variables
         if [ ! -z "$HYBRIS_DATAHUB_URL" ]; then
             echo "datahubadapter.datahuboutbound.url=$HYBRIS_DATAHUB_URL" >> config/local.properties
         fi
-        
+
     fi
 
     cd ${PLATFORM_HOME}
@@ -49,9 +49,9 @@ if [ "$1" = 'run' ]; then
     	# run hybris update with predefined config
     	gosu hybris ant updatesystem -DconfigFile=/home/hybris/updateRunningSystem.config
     fi
-    
+
     # run hybris commerce suite as user hybris
-    exec gosu hybris ./hybrisserver.sh $@
+    exec gosu hybris ./hybrisserver.sh $2
 
 fi
 

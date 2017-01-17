@@ -20,13 +20,26 @@ The image on [DockerHub](https://hub.docker.com/r/stefanlehmann/hybris-base-imag
 * oracle java 8 (server jre 8u111b14)
 
 #### User
-hybris:hybris (with uid 1000)
+
+| User   | Group  | uid  | gid  |
+|--------|--------|------|------|
+| hybris | hybris | 1000 | 1000 |
 
 #### Ports
+
+| Port | Purpose            |
+|------|--------------------|
+| 9001 | default HTTP port  |
+| 9002 | default HTTPS port |
+| 8983 | default SOLR port  |
+| 8000 | default DEBUG port |
+
 The image exposes ``9001`` and ``9002`` for access to the hybris Tomcat server via HTTP and HTTPS.
 
-Also the default Solr server port ``8983`` is exposed for accessing the solr admin webinterface.
+Also the default Solr server port ``8983`` is exposed.
 > Please be aware that in non dev environments the Solr server(s) should run in own container(s).
+
+If you like to debug via your IDE on the running server you can use the exposed ``8000`` port.
 
 #### Volumes
 The hybris home directory `/home/hybris` is marked as volume.
@@ -75,6 +88,12 @@ For the latter no own images are needed.
 ##### Using hybris artefacts in directory on Docker host
 
 	docker run -d --name HYBRIS_CONTAINER_NAME -p HOST_HTTP_PORT:9001 -p HOST_HTTPS_PORT:9002 -v /PATH/TO/hybris:/home/hybris stefanlehmann/hybris-base-image:latest
+
+##### Running with debug listener enabled
+
+	docker run -d --name HYBRIS_CONTAINER_NAME -p HOST_HTTP_PORT:9001 -p HOST_HTTPS_PORT:9002 REGISTRY/IMAGE:VERSION run debug
+
+The important part is the ``run debug`` at the end if the line.
 
 ##### Running update system when starting a container
 
