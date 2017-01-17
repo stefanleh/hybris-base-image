@@ -20,7 +20,10 @@ The image on [DockerHub](https://hub.docker.com/r/stefanlehmann/hybris-base-imag
 * oracle java 8 (server jre 8u111b14)
 
 #### User
-hybris:hybris (with uid 1000)
+
+| User   | Group  | uid  | gid  |
+|--------|--------|------|------|
+| hybris | hybris | 1000 | 1000 |
 
 #### Ports
 
