@@ -89,6 +89,12 @@ For the latter no own images are needed.
 
 	docker run -d --name HYBRIS_CONTAINER_NAME -p HOST_HTTP_PORT:9001 -p HOST_HTTPS_PORT:9002 -v /PATH/TO/hybris:/home/hybris stefanlehmann/hybris-base-image:latest
 
+##### Running with debug listener enabled
+
+	docker run -d --name HYBRIS_CONTAINER_NAME -p HOST_HTTP_PORT:9001 -p HOST_HTTPS_PORT:9002 REGISTRY/IMAGE:VERSION run debug
+
+The important part is the ``run debug`` at the end if the line.
+
 ##### Running update system when starting a container
 
 For automation of running the system update before starting the server you can use the environment variable `HYBRIS_UPDATE_SYSTEM=yes`.
