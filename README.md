@@ -13,9 +13,9 @@ The image on [DockerHub](https://hub.docker.com/r/stefanlehmann/hybris-base-imag
 * [gosu](https://github.com/tianon/gosu)
 * lsof
 * unzip
-* ca-certificates 
-* curl 
-* oracle java 8 (server jre 8u91b14)
+* ca-certificates
+* curl
+* oracle java 8 (server jre 8u111b14)
 
 #### User
 hybris:hybris (with uid 1000)
@@ -99,7 +99,7 @@ After you got your config you can include it into your own application image via
 
 As the image is not intended for recompiling the hybris platform inside a container please get sure to build with following parameter in your ``local.properties`` to avoid hardcoded paths in your config artifact:
 
-	
+
 	## https://wiki.hybris.com/display/release5/ant+production+improvements#antproductionimprovements-withoutAntHowtorunhybrisserveronproductionenvironmentwithoutneedtocallanyanttarget
 	## for docker we need to use the PLATFORM_HOME environment variable instead of absolute paths in server*.xml files and wrapper*.conf files
 	production.legacy.mode=false
