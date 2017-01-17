@@ -4,7 +4,9 @@ A base image for Hybris Commerce Suite, based on **ubuntu:latest**.
 
 Can be used Out-Of-The-Box for projects based on Hybris Commerce Suite >5.5.
 
-The image on [DockerHub](https://hub.docker.com/r/stefanlehmann/hybris-base-image/ "DockerHub") is built automatically from the Dockerfile here.
+**Please read this documentation directly in [GitHub](https://github.com/stefanleh/hybris-base-image "GitHub"). Otherwise the links might not work.**
+
+The image on [DockerHub](https://hub.docker.com/r/stefanlehmann/hybris-base-image/ "DockerHub") is built automatically from the Dockerfile in the GitHub source repository.
 
 [![](https://images.microbadger.com/badges/image/stefanlehmann/hybris-base-image.svg)](https://microbadger.com/#/images/stefanlehmann/hybris-base-image "Get your own image badge on microbadger.com")
 
@@ -98,7 +100,6 @@ After you got your config you can include it into your own application image via
 #### Hint
 
 As the image is not intended for recompiling the hybris platform inside a container please get sure to build with following parameter in your ``local.properties`` to avoid hardcoded paths in your config artifact:
-
 
 	## https://wiki.hybris.com/display/release5/ant+production+improvements#antproductionimprovements-withoutAntHowtorunhybrisserveronproductionenvironmentwithoutneedtocallanyanttarget
 	## for docker we need to use the PLATFORM_HOME environment variable instead of absolute paths in server*.xml files and wrapper*.conf files
