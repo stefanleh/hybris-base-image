@@ -42,6 +42,12 @@ if [ "$1" = 'run' ]; then
     chown -R hybris /home/hybris
     chmod +x hybrisserver.sh
     
+    # set ant environment
+    exec gosu hybris . ./setantenv.sh
+    
+    # run hybris update with predefined config
+    exec gosu hybris ./ant updatesystem -DconfigFile=/home/hybris/updateRunningSystem.config
+    
     # run hybris commerce suite as user hybris
     exec gosu hybris ./hybrisserver.sh $@
 
