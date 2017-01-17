@@ -55,6 +55,9 @@ EXPOSE 9002
 # expose default solr port
 EXPOSE 8983
 
+# expose the default debug port for connecting via IDE
+EXPOSE 8000
+
 # copy the entrypoint script over
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
