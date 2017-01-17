@@ -75,6 +75,26 @@ For the latter no own images are needed.
 
 	docker run -d --name HYBRIS_CONTAINER_NAME -p HOST_HTTP_PORT:9001 -p HOST_HTTPS_PORT:9002 -v /PATH/TO/hybris:/home/hybris stefanlehmann/hybris-base-image:latest
 
+##### Running update system when starting a container
+
+For automation of running the system update before starting the server you can use the environment variable `HYBRIS_UPDATE_SYSTEM=yes`.
+You can find the default configuration for this in [updateRunningSystem.config](updateRunningSystem.config).
+
+If you like to use your own configuration you can export it in HAC
+
+![HAC Screenshot](https://github.com/stefanleh/hybris-base-image/raw/develop/documentation/images/hybris_administration_console_export_config.png)
+
+After you got your config you can include it into your own application image via
+
+	FROM stefanlehmann/hybris-base-image:latest
+	MAINTAINER You <you.yourname@yourdomain.com>
+
+	# copy the build packages over
+	COPY hybrisServer*.zip /home/hybris/
+
+	# copy the update system config to image
+	COPY updateRunningSystem.config /home/hybris/updateRunningSystem.config
+
 #### Hint
 
 As the image is not intended for recompiling the hybris platform inside a container please get sure to build with following parameter in your ``local.properties`` to avoid hardcoded paths in your config artifact:
