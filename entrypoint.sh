@@ -41,15 +41,17 @@ if [ "$1" = 'run' ]; then
     # fix ownership of files
     chown -R hybris /home/hybris
     chmod +x hybrisserver.sh
-    
-    # set ant environment
-    exec gosu hybris ". ./setantenv.sh"
-    
-    # run hybris update with predefined config
-    exec gosu hybris "./ant updatesystem -DconfigFile=/home/hybris/updateRunningSystem.config"
+
+    # if update system is wanted we do it before starting the hybris server
+    if [ "$HYBRIS_UPDATE_SYSTEM" = "yes" ]; then
+    	# set ant environment
+    	source ./setantenv.sh
+    	# run hybris update with predefined config
+    	gosu hybris ant updatesystem -DconfigFile=/home/hybris/updateRunningSystem.config
+    fi
     
     # run hybris commerce suite as user hybris
-    exec gosu hybris "./hybrisserver.sh $@"
+    exec gosu hybris ./hybrisserver.sh $@
 
 fi
 
