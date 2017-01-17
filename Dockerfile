@@ -58,6 +58,9 @@ EXPOSE 8983
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
+# copy the update system config to image
+COPY updateRunningSystem.config /home/hybris/updateRunningSystem.config
+
 WORKDIR /home/hybris
 
 # set entrypoint of container
