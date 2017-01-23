@@ -2,8 +2,8 @@ FROM ubuntu:latest
 MAINTAINER Stefan Lehmann <stefan.lehmann@unic.com>
 
 ENV VERSION 8
-ENV UPDATE 111
-ENV BUILD 14
+ENV UPDATE 121
+ENV BUILD 1b
 
 ENV GOSU_VERSION 1.9
 
