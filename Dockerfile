@@ -3,7 +3,7 @@ MAINTAINER Stefan Lehmann <stefan.lehmann@unic.com>
 
 ENV VERSION 8
 ENV UPDATE 121
-ENV BUILD 1b
+ENV BUILD 13
 
 ENV GOSU_VERSION 1.9
 
