@@ -14,7 +14,7 @@ ENV JRE_HOME ${JAVA_HOME}/jre
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates net-tools curl unzip lsof wget \
     && curl --silent --location --retry 3 --cacert /etc/ssl/certs/GeoTrust_Global_CA.pem \
        --header "Cookie: oraclelicense=accept-securebackup-cookie;" \
-       http://download.oracle.com/otn-pub/java/jdk/"${VERSION}"u"${UPDATE}"-b"${BUILD}"/e9e7ea248e2c4826b92b3f075a80e441/server-jre-"${VERSION}"u"${UPDATE}"-linux-x64.tar.gz \
+       http://download.oracle.com/otn-pub/java/jdk/"${VERSION}"u"${UPDATE}"-b"${BUILD}"/d54c1d3a095b4ff2b6607d096fa80163/server-jre-"${VERSION}"u"${UPDATE}"-linux-x64.tar.gz \
        | tar xz -C /tmp \
     && mkdir -p /usr/lib/jvm && mv /tmp/jdk1.${VERSION}.0_${UPDATE} "${JAVA_HOME}" \
     && apt-get autoclean && apt-get --purge -y autoremove \
