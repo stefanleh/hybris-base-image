@@ -17,7 +17,7 @@ The image on [DockerHub](https://hub.docker.com/r/stefanlehmann/hybris-base-imag
 * unzip
 * ca-certificates
 * curl
-* oracle java 8 (server jre 8u121b13)
+* oracle java 8 (server jre 8u131b11)
 
 #### User
 
