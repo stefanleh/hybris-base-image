@@ -122,3 +122,65 @@ As the image is not intended for recompiling the hybris platform inside a contai
 	## https://wiki.hybris.com/display/release5/ant+production+improvements#antproductionimprovements-withoutAntHowtorunhybrisserveronproductionenvironmentwithoutneedtocallanyanttarget
 	## for docker we need to use the PLATFORM_HOME environment variable instead of absolute paths in server*.xml files and wrapper*.conf files
 	production.legacy.mode=false
+
+
+#### Complete example on how to use this image
+
+##### Build of complete image (B2C Acc)
+
+	# download hybris 6.4
+	curl -v -u "USER:PASSWORD" https://nexus.YOURCOMPANY.com/nexus/repository/thirdparty/de/hybris/platform/hybris-commerce-suite/6.5.0.0/hybris-commerce-suite-6.5.0.0.zip -o hybris-commerce-suite-6.5.0.0.zip
+	
+	# unzip hybris
+	unzip hybris-commerce-suite-6.5.0.0.zip || ( e=$? && if [ $e -ne 1 ]; then exit $e; fi )
+	
+	# add custom config for creation of production artifacts
+	cd installer
+	chmod +x install.sh
+	echo "production.legacy.mode=false
+	installed.tenants=
+	website.apparel-de.http=http://YOUR-DOCKER-HOST:9001/yacceleratorstorefront
+	website.apparel-de.https=https://YOUR-DOCKER-HOST:9002/yacceleratorstorefront
+	website.apparel-uk.http=http://YOUR-DOCKER-HOST:9001/yacceleratorstorefront
+	website.apparel-uk.https=https://YOUR-DOCKER-HOST:9002/yacceleratorstorefront
+	website.electronics.http=http://YOUR-DOCKER-HOST:9001/yacceleratorstorefront
+	website.electronics.https=https://YOUR-DOCKER-HOST:9002/yacceleratorstorefront" > customconfig/custom.properties
+	
+	# run installer with b2b recipe
+	./install.sh -r b2c_acc_plus
+	
+	# create production artifacts
+	cd ../hybris/bin/platform
+	. ./setantenv.sh
+	ant clean all production
+	
+	# create Dockerfile
+	cd ../../..
+	mkdir docker
+	mv hybris/temp/hybris/hybrisServer/hybrisServer*.zip docker/
+	cd docker
+	echo "FROM stefanlehmann/hybris-base-image:latest
+	ENV PLATFORM_HOME=/home/hybris/bin/platform
+	ENV PATH=\$PLATFORM_HOME:\$PATH
+	COPY hybrisServer*.zip /home/hybris/" >> Dockerfile
+	cat Dockerfile
+
+##### Build the image (still in docker dir created before)
+
+	docker build .
+
+##### Tag and upload image (optional if you build image on your docker host)
+
+	docker tag IMAGEID IMAGENAME
+
+##### Start Image
+
+	docker run -d -p 9001:9001 -p 9002:9002 IMAGEID/IMAGENAME
+
+##### Initialize
+
+Open ``https://YOUR-DOCKER-HOST:9002/`` and use HAC for Initialization
+
+##### Accelerator Frontend
+
+Open ``https://YOUR-DOCKER-HOST:9002/yacceleratorstorefront?site=apparel-de`` 
