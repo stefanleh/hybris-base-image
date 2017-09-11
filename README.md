@@ -128,7 +128,7 @@ As the image is not intended for recompiling the hybris platform inside a contai
 
 ##### Build of complete image (B2C Acc)
 
-	# download hybris 6.4
+	# download hybris 6.5
 	curl -v -u "USER:PASSWORD" https://nexus.YOURCOMPANY.com/nexus/repository/thirdparty/de/hybris/platform/hybris-commerce-suite/6.5.0.0/hybris-commerce-suite-6.5.0.0.zip -o hybris-commerce-suite-6.5.0.0.zip
 	
 	# unzip hybris
