@@ -146,7 +146,7 @@ As the image is not intended for recompiling the hybris platform inside a contai
 	website.electronics.http=http://YOUR-DOCKER-HOST:9001/yacceleratorstorefront
 	website.electronics.https=https://YOUR-DOCKER-HOST:9002/yacceleratorstorefront" > customconfig/custom.properties
 	
-	# run installer with b2b recipe
+	# run installer with b2c recipe
 	./install.sh -r b2c_acc_plus
 	
 	# create production artifacts
