@@ -8,7 +8,8 @@ Can be used Out-Of-The-Box for projects based on Hybris Commerce Suite >5.5.
 
 The image on [DockerHub](https://hub.docker.com/r/stefanlehmann/hybris-base-image/ "DockerHub") is built automatically from the Dockerfile in the GitHub source repository.
 
-[![](https://images.microbadger.com/badges/image/stefanlehmann/hybris-base-image.svg)](https://microbadger.com/#/images/stefanlehmann/hybris-base-image "Get your own image badge on microbadger.com")
+[![](https://images.microbadger.com/badges/image/stefanlehmann/hybris-base-image.svg)](https://microbadger.com/images/stefanlehmann/hybris-base-image "Get your own image badge on microbadger.com")
+[![](https://images.microbadger.com/badges/version/stefanlehmann/hybris-base-image.svg)](https://microbadger.com/images/stefanlehmann/hybris-base-image "Get your own version badge on microbadger.com")
 
 #### Installed packages
 
