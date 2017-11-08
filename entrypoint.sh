@@ -46,8 +46,8 @@ if [ "$1" = 'run' ]; then
     if [ "$HYBRIS_INITIALIZE_SYSTEM" = "yes" ]; then
         # set ant environment
     	source ./setantenv.sh
-    	# run hybris update with predefined config
-    	gosu hybris ant initialize
+    	# run hybris update with predefined config and without rebuilding
+    	gosu hybris ant initialize -Dde.hybris.platform.ant.production.skip.build=true 
     fi
 
     # if update system is wanted we do it before starting the hybris server
