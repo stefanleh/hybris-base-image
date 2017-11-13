@@ -173,6 +173,7 @@ As the image is not intended for recompiling the hybris platform inside a contai
 ##### Tag and upload image (optional if you build image on your docker host)
 
 	docker tag IMAGEID IMAGENAME
+	docker push IMAGENAME
 
 ##### Start Image
 
@@ -181,6 +182,8 @@ As the image is not intended for recompiling the hybris platform inside a contai
 ##### Initialize
 
 Open ``https://YOUR-DOCKER-HOST:9002/`` and use HAC for Initialization
+
+or set HYBRIS_INITIALIZE_SYSTEM environment variable to "yes"
 
 ##### Accelerator Frontend
 
