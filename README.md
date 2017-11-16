@@ -183,7 +183,7 @@ As the image is not intended for recompiling the hybris platform inside a contai
 
 Open ``https://YOUR-DOCKER-HOST:9002/`` and use HAC for Initialization
 
-or set HYBRIS_INITIALIZE_SYSTEM environment variable to "yes"
+or set ``HYBRIS_INITIALIZE_SYSTEM`` environment variable to ``yes``
 
 ##### Accelerator Frontend
 
