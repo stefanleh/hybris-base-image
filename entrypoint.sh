@@ -4,13 +4,17 @@ export DOCKER_CONTAINER_IP=$(ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?
 
 if [ "$1" = 'run' ]; then
 
-    if [ ! -d "/home/hybris/bin" ]; then
+    if [ -z "$HYBRIS_HOME" ]; then
+        HYBRIS_HOME="/home/hybris"
+    fi
 
-        cd /home/hybris
+    if [ ! -d "$HYBRIS_HOME/config" ]; then
+
+        cd $HYBRIS_HOME
 
         # unzip the artifacts created by production ant target
         echo "Unzipping hybris production archives ..."
-        for z in hybrisServer*.zip; do unzip $z -d /home ; done
+        for z in hybrisServer*.zip; do unzip $z -d $(dirname $HYBRIS_HOME) ; done
 
         # add container ip to cluster configuration of hybris instance
         echo "cluster.broadcast.method.jgroups.tcp.bind_addr=$DOCKER_CONTAINER_IP" >> config/local.properties
@@ -39,7 +43,7 @@ if [ "$1" = 'run' ]; then
     cd ${PLATFORM_HOME}
 
     # fix ownership of files
-    chown -R hybris /home/hybris
+    chown -R hybris $HYBRIS_HOME
     chmod +x hybrisserver.sh
 
     # if initialize system is wanted we do it before starting the hybris server
@@ -55,7 +59,7 @@ if [ "$1" = 'run' ]; then
     	# set ant environment
     	source ./setantenv.sh
     	# run hybris update with predefined config
-    	gosu hybris ant updatesystem -DconfigFile=/home/hybris/updateRunningSystem.config
+    	gosu hybris ant updatesystem -DconfigFile=$HYBRIS_HOME/updateRunningSystem.config
     fi
 
     # run hybris commerce suite as user hybris
