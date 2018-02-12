@@ -10,6 +10,8 @@ ENV GOSU_VERSION 1.9
 ENV JAVA_HOME /usr/lib/jvm/java-${VERSION}-oracle
 ENV JRE_HOME ${JAVA_HOME}/jre
 
+ARG HYBRIS_HOME=/home/hybris
+
 ARG VCS_REF
 LABEL org.label-schema.vcs-ref=$VCS_REF \
       org.label-schema.vcs-url="https://github.com/stefanleh/hybris-base-image"
@@ -43,14 +45,15 @@ RUN set -x \
     && gosu nobody true
 
 # set the PLATFORM_HOME environment variable used by hybris
-ENV PLATFORM_HOME=/home/hybris/bin/platform/
+ENV PLATFORM_HOME=${HYBRIS_HOME}/bin/platform/
 ENV PATH=$PLATFORM_HOME:$PATH
+ENV HYBRIS_HOME=${HYBRIS_HOME}
 
 # add hybris user
-RUN useradd -d /home/hybris -u 1000 -m -s /bin/bash hybris
+RUN useradd -d ${HYBRIS_HOME} -u 1000 -m -s /bin/bash hybris
 
 # define hybris home dir as volume
-VOLUME /home/hybris
+VOLUME ${HYBRIS_HOME}
 
 # expose hybris ports
 EXPOSE 9001
@@ -67,9 +70,9 @@ COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # copy the update system config to image
-COPY updateRunningSystem.config /home/hybris/updateRunningSystem.config
+COPY updateRunningSystem.config ${HYBRIS_HOME}/updateRunningSystem.config
 
-WORKDIR /home/hybris
+WORKDIR ${HYBRIS_HOME}
 
 # set entrypoint of container
 ENTRYPOINT ["/entrypoint.sh"]
