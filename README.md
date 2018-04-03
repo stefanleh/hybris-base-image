@@ -18,7 +18,7 @@ The image on [DockerHub](https://hub.docker.com/r/stefanlehmann/hybris-base-imag
 * unzip
 * ca-certificates
 * curl
-* oracle java 8 (server jre 8u131b11)
+* oracle java 8 (server jre 8u161b12)
 
 #### User
 
@@ -43,7 +43,7 @@ Also the default Solr server port ``8983`` is exposed.
 If you like to debug via your IDE on the running server you can use the exposed ``8000`` port.
 
 #### Volumes
-The hybris home directory `/home/hybris` is marked as volume.
+The hybris home directory `/home/hybris` is marked as volume. You can override it by setting the `HYBRIS_HOME` variable.
 
 #### How to add your code
 
@@ -55,7 +55,7 @@ If you want you can copy unzipped content too, but this will bloat the images yo
 	MAINTAINER You <you.yourname@yourdomain.com>
 
 	# copy the build packages over
-	COPY hybrisServer*.zip /home/hybris/
+	COPY hybrisServer*.zip $HYBRIS_HOME
 
 #### Configuration support
 
@@ -111,10 +111,10 @@ After you got your config you can include it into your own application image via
 	MAINTAINER You <you.yourname@yourdomain.com>
 
 	# copy the build packages over
-	COPY hybrisServer*.zip /home/hybris/
+	COPY hybrisServer*.zip $HYBRIS_HOME
 
 	# copy the update system config to image
-	COPY updateRunningSystem.config /home/hybris/updateRunningSystem.config
+	COPY updateRunningSystem.config $HYBRIS_HOME/updateRunningSystem.config
 
 #### Hint
 
@@ -161,9 +161,9 @@ As the image is not intended for recompiling the hybris platform inside a contai
 	mv hybris/temp/hybris/hybrisServer/hybrisServer*.zip docker/
 	cd docker
 	echo "FROM stefanlehmann/hybris-base-image:latest
-	ENV PLATFORM_HOME=/home/hybris/bin/platform
+	ENV PLATFORM_HOME=\$HYBRIS_HOME/bin/platform
 	ENV PATH=\$PLATFORM_HOME:\$PATH
-	COPY hybrisServer*.zip /home/hybris/" >> Dockerfile
+	COPY hybrisServer*.zip $HYBRIS_HOME" >> Dockerfile
 	cat Dockerfile
 
 ##### Build the image (still in docker dir created before)

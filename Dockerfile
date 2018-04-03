@@ -1,14 +1,16 @@
 FROM ubuntu:latest
-MAINTAINER Stefan Lehmann <stefan.lehmann@unic.com>
+MAINTAINER Stefan Lehmann <stefan.lehmann@oxaion.de>
 
 ENV VERSION 8
-ENV UPDATE 131
-ENV BUILD 11
+ENV UPDATE 161
+ENV BUILD 12
 
 ENV GOSU_VERSION 1.9
 
 ENV JAVA_HOME /usr/lib/jvm/java-${VERSION}-oracle
 ENV JRE_HOME ${JAVA_HOME}/jre
+
+ARG HYBRIS_HOME=/home/hybris
 
 ARG VCS_REF
 LABEL org.label-schema.vcs-ref=$VCS_REF \
@@ -18,7 +20,7 @@ LABEL org.label-schema.vcs-ref=$VCS_REF \
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates net-tools curl unzip lsof wget \
     && curl --silent --location --retry 3 --cacert /etc/ssl/certs/GeoTrust_Global_CA.pem \
        --header "Cookie: oraclelicense=accept-securebackup-cookie;" \
-       http://download.oracle.com/otn-pub/java/jdk/"${VERSION}"u"${UPDATE}"-b"${BUILD}"/d54c1d3a095b4ff2b6607d096fa80163/server-jre-"${VERSION}"u"${UPDATE}"-linux-x64.tar.gz \
+       http://download.oracle.com/otn-pub/java/jdk/"${VERSION}"u"${UPDATE}"-b"${BUILD}"/2f38c3b165be4555a1fa6e98c45e0808/jdk-"${VERSION}"u"${UPDATE}"-linux-x64.tar.gz \
        | tar xz -C /tmp \
     && mkdir -p /usr/lib/jvm && mv /tmp/jdk1.${VERSION}.0_${UPDATE} "${JAVA_HOME}" \
     && apt-get autoclean && apt-get --purge -y autoremove \
@@ -43,14 +45,15 @@ RUN set -x \
     && gosu nobody true
 
 # set the PLATFORM_HOME environment variable used by hybris
-ENV PLATFORM_HOME=/home/hybris/bin/platform/
+ENV PLATFORM_HOME=${HYBRIS_HOME}/bin/platform/
 ENV PATH=$PLATFORM_HOME:$PATH
+ENV HYBRIS_HOME=${HYBRIS_HOME}
 
 # add hybris user
-RUN useradd -d /home/hybris -u 1000 -m -s /bin/bash hybris
+RUN useradd -d ${HYBRIS_HOME} -u 1000 -m -s /bin/bash hybris
 
 # define hybris home dir as volume
-VOLUME /home/hybris
+VOLUME ${HYBRIS_HOME}
 
 # expose hybris ports
 EXPOSE 9001
@@ -67,9 +70,9 @@ COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # copy the update system config to image
-COPY updateRunningSystem.config /home/hybris/updateRunningSystem.config
+COPY updateRunningSystem.config ${HYBRIS_HOME}/updateRunningSystem.config
 
-WORKDIR /home/hybris
+WORKDIR ${HYBRIS_HOME}
 
 # set entrypoint of container
 ENTRYPOINT ["/entrypoint.sh"]
