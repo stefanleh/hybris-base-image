@@ -4,7 +4,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 ENV GOSU_VERSION 1.10
 
 # hybris needs unzip and lsof for the solr server setup
-RUN    apt-get update \ 
+RUN    apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates wget \
     && apt-get install -y --install-recommends dirmngr
 
@@ -29,11 +29,14 @@ ARG HYBRIS_HOME=/home/hybris
 ARG VCS_REF
 LABEL org.label-schema.vcs-ref=$VCS_REF \
       org.label-schema.vcs-url="https://github.com/stefanleh/hybris-base-image"
-      
+
 ARG DEBIAN_FRONTEND=noninteractive
 
+# hybris needs the JAVA_HOME environment variable even if java is in path
+ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
+
 # hybris needs unzip and lsof for the solr server setup
-RUN    apt-get update \ 
+RUN    apt-get update \
     && apt-get install -y --no-install-recommends software-properties-common apt-utils ca-certificates net-tools curl unzip lsof wget \
     && add-apt-repository ppa:webupd8team/java \
     && echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections \
@@ -43,7 +46,7 @@ RUN    apt-get update \
 
 # copy gosu from buildcontainer over
 COPY --from=buildcontainer /usr/local/bin/gosu /usr/local/bin/gosu
-    
+
 # set the PLATFORM_HOME environment variable used by hybris
 ENV PLATFORM_HOME=${HYBRIS_HOME}/bin/platform/
 ENV PATH=$PLATFORM_HOME:$PATH
