@@ -131,10 +131,10 @@ As the image is not intended for recompiling the hybris platform inside a contai
 
 	# download hybris 6.5
 	curl -v -u "USER:PASSWORD" https://nexus.YOURCOMPANY.com/nexus/repository/thirdparty/de/hybris/platform/hybris-commerce-suite/6.5.0.0/hybris-commerce-suite-6.5.0.0.zip -o hybris-commerce-suite-6.5.0.0.zip
-	
+
 	# unzip hybris
 	unzip hybris-commerce-suite-6.5.0.0.zip || ( e=$? && if [ $e -ne 1 ]; then exit $e; fi )
-	
+
 	# add custom config for creation of production artifacts
 	cd installer
 	chmod +x install.sh
@@ -146,15 +146,15 @@ As the image is not intended for recompiling the hybris platform inside a contai
 	website.apparel-uk.https=https://YOUR-DOCKER-HOST:9002/yacceleratorstorefront
 	website.electronics.http=http://YOUR-DOCKER-HOST:9001/yacceleratorstorefront
 	website.electronics.https=https://YOUR-DOCKER-HOST:9002/yacceleratorstorefront" > customconfig/custom.properties
-	
+
 	# run installer with b2c recipe
 	./install.sh -r b2c_acc_plus
-	
+
 	# create production artifacts
 	cd ../hybris/bin/platform
 	. ./setantenv.sh
 	ant clean all production
-	
+
 	# create Dockerfile
 	cd ../../..
 	mkdir docker
@@ -165,6 +165,36 @@ As the image is not intended for recompiling the hybris platform inside a contai
 	ENV PATH=\$PLATFORM_HOME:\$PATH
 	COPY hybrisServer*.zip $HYBRIS_HOME" >> Dockerfile
 	cat Dockerfile
+
+##### Alternative way of building complete image using Dockerfile (with intermediate buildcontainer) only
+
+  FROM stefanlehmann/hybris-base-image:latest as buildcontainer
+  ENV HYBRIS_VERSION 6.5.0.0
+  WORKDIR /tmp
+
+  # download hybris
+  RUN curl --location --silent -u "USER:PASSWORD" \
+      "https://nexus.YOURCOMPANY.com/nexus/repository/thirdparty/de/hybris/platform/hybris-commerce-suite/$HYBRIS_VERSION/hybris-commerce-suite-$HYBRIS_VERSION.zip" \
+       -o "hybris-commerce-suite-$HYBRIS_VERSION.zip"
+
+  # if you get the zip from build context you can of course copy it into the buildcontainer directly
+  # COPY hybris-commerce-suite-"${HYBRIS_VERSION}".zip .
+
+  # add custom settings from build context (optional)
+  # COPY custom.properties installer/customconfig/custom.properties
+
+  # build production zips
+  RUN unzip -qq hybris-commerce-suite-"${HYBRIS_VERSION}".zip \
+      && cd installer \
+      && chmod +x install.sh \
+      && ./install.sh -r b2c_acc \
+      && cd ../hybris/bin/platform \
+      && . ./setantenv.sh \
+      && ant clean all production
+
+  # build real image
+  FROM stefanlehmann/hybris-base-image:latest
+  COPY --from=buildcontainer /tmp/hybris/temp/hybris/hybrisServer/*.zip /home/hybris/
 
 ##### Build the image (still in docker dir created before)
 
@@ -187,4 +217,4 @@ or set ``HYBRIS_INITIALIZE_SYSTEM`` environment variable to ``yes``
 
 ##### Accelerator Frontend
 
-Open ``https://YOUR-DOCKER-HOST:9002/yacceleratorstorefront?site=apparel-de`` 
+Open ``https://YOUR-DOCKER-HOST:9002/yacceleratorstorefront?site=apparel-de``
