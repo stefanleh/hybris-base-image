@@ -39,7 +39,7 @@ RUN    apt-get update \
     && echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections \
     && apt-get install -y oracle-java8-installer  \
     && apt-get autoclean && apt-get --purge -y autoremove \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/cache/*
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/cache/* /usr/lib/jvm/java-8-oracle/*src.zip
 
 # copy gosu from buildcontainer over
 COPY --from=buildcontainer /usr/local/bin/gosu /usr/local/bin/gosu
