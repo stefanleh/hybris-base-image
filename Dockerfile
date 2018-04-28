@@ -5,7 +5,7 @@ ENV VERSION 8
 ENV UPDATE 161
 ENV BUILD 12
 
-ENV GOSU_VERSION 1.9
+ENV GOSU_VERSION 1.10
 
 ENV JAVA_HOME /usr/lib/jvm/java-${VERSION}-oracle
 ENV JRE_HOME ${JAVA_HOME}/jre
@@ -15,15 +15,16 @@ ARG HYBRIS_HOME=/home/hybris
 ARG VCS_REF
 LABEL org.label-schema.vcs-ref=$VCS_REF \
       org.label-schema.vcs-url="https://github.com/stefanleh/hybris-base-image"
-
-# accept the oracle java licence (must be done before install)
-echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
+      
+ARG DEBIAN_FRONTEND=noninteractive
 
 # hybris needs unzip and lsof for the solr server setup
 RUN    apt-get update \ 
+    && apt-get install -y --no-install-recommends software-properties-common apt-utils ca-certificates net-tools curl unzip lsof wget \
     && add-apt-repository ppa:webupd8team/java \
-    && apt-get update \ 
-    && apt-get install -y oracle-java8-installer ca-certificates net-tools curl unzip lsof wget \
+    && echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections \
+    && apt-get install -y oracle-java8-installer  \
+    && apt-get install -y --install-recommends dirmngr \
     && apt-get autoclean && apt-get --purge -y autoremove \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
@@ -38,7 +39,7 @@ RUN set -x \
     && rm -r "$GNUPGHOME" /usr/local/bin/gosu.asc \
     && chmod +x /usr/local/bin/gosu \
     && gosu nobody true
-
+    
 # set the PLATFORM_HOME environment variable used by hybris
 ENV PLATFORM_HOME=${HYBRIS_HOME}/bin/platform/
 ENV PATH=$PLATFORM_HOME:$PATH
