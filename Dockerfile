@@ -17,20 +17,11 @@ LABEL org.label-schema.vcs-ref=$VCS_REF \
       org.label-schema.vcs-url="https://github.com/stefanleh/hybris-base-image"
 
 # hybris needs unzip and lsof for the solr server setup
-RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates net-tools curl unzip lsof wget \
-    && curl --silent --location --retry 3 --cacert /etc/ssl/certs/GeoTrust_Global_CA.pem \
-       --header "Cookie: oraclelicense=accept-securebackup-cookie;" \
-       http://download.oracle.com/otn-pub/java/jdk/"${VERSION}"u"${UPDATE}"-b"${BUILD}"/2f38c3b165be4555a1fa6e98c45e0808/jdk-"${VERSION}"u"${UPDATE}"-linux-x64.tar.gz \
-       | tar xz -C /tmp \
-    && mkdir -p /usr/lib/jvm && mv /tmp/jdk1.${VERSION}.0_${UPDATE} "${JAVA_HOME}" \
+RUN add-apt-repository ppa:webupd8team/java \
+    && apt-get update \ 
+    && apt-get install -y oracle-java8-installer ca-certificates net-tools curl unzip lsof wget \
     && apt-get autoclean && apt-get --purge -y autoremove \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-# set oracle jre as default java
-RUN update-alternatives --install "/usr/bin/java" "java" "${JRE_HOME}/bin/java" 1 \
-    && update-alternatives --install "/usr/bin/javac" "javac" "${JAVA_HOME}/bin/javac" 1 \
-    && update-alternatives --set java "${JRE_HOME}/bin/java" \
-    && update-alternatives --set javac "${JAVA_HOME}/bin/javac"
 
 # grab gosu for easy step-down from root
 RUN set -x \
