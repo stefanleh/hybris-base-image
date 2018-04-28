@@ -1,14 +1,7 @@
 FROM ubuntu:latest
 MAINTAINER Stefan Lehmann <stefan.lehmann@oxaion.de>
 
-ENV VERSION 8
-ENV UPDATE 161
-ENV BUILD 12
-
 ENV GOSU_VERSION 1.10
-
-ENV JAVA_HOME /usr/lib/jvm/java-${VERSION}-oracle
-ENV JRE_HOME ${JAVA_HOME}/jre
 
 ARG HYBRIS_HOME=/home/hybris
 
