@@ -1,7 +1,28 @@
+FROM ubuntu:latest as buildcontainer
+
+ARG DEBIAN_FRONTEND=noninteractive
+ENV GOSU_VERSION 1.10
+
+# hybris needs unzip and lsof for the solr server setup
+RUN    apt-get update \ 
+    && apt-get install -y --no-install-recommends ca-certificates wget \
+    && apt-get install -y --install-recommends dirmngr
+
+# grab gosu for easy step-down from root
+RUN set -x \
+    && dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')" \
+    && wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch" \
+    && wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch.asc" \
+    && export GNUPGHOME="$(mktemp -d)" \
+    && gpg --keyserver ha.pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 \
+    && gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
+    && rm -r "$GNUPGHOME" /usr/local/bin/gosu.asc \
+    && chmod +x /usr/local/bin/gosu \
+    && gosu nobody true
+
+
 FROM ubuntu:latest
 MAINTAINER Stefan Lehmann <stefan.lehmann@oxaion.de>
-
-ENV GOSU_VERSION 1.10
 
 ARG HYBRIS_HOME=/home/hybris
 
@@ -17,21 +38,11 @@ RUN    apt-get update \
     && add-apt-repository ppa:webupd8team/java \
     && echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections \
     && apt-get install -y oracle-java8-installer  \
-    && apt-get install -y --install-recommends dirmngr \
     && apt-get autoclean && apt-get --purge -y autoremove \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/cache/*
 
-# grab gosu for easy step-down from root
-RUN set -x \
-    && dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')" \
-    && wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch" \
-    && wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch.asc" \
-    && export GNUPGHOME="$(mktemp -d)" \
-    && gpg --keyserver ha.pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 \
-    && gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
-    && rm -r "$GNUPGHOME" /usr/local/bin/gosu.asc \
-    && chmod +x /usr/local/bin/gosu \
-    && gosu nobody true
+# copy gosu from buildcontainer over
+COPY --from=buildcontainer /usr/local/bin/gosu /usr/local/bin/gosu
     
 # set the PLATFORM_HOME environment variable used by hybris
 ENV PLATFORM_HOME=${HYBRIS_HOME}/bin/platform/
