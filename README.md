@@ -168,33 +168,33 @@ As the image is not intended for recompiling the hybris platform inside a contai
 
 ##### Alternative way of building complete image using Dockerfile (with intermediate buildcontainer) only
 
-  FROM stefanlehmann/hybris-base-image:latest as buildcontainer
-  ENV HYBRIS_VERSION 6.5.0.0
-  WORKDIR /tmp
+	FROM stefanlehmann/hybris-base-image:latest as buildcontainer
+	ENV HYBRIS_VERSION 6.5.0.0
+	WORKDIR /tmp
 
-  # download hybris
-  RUN curl --location --silent -u "USER:PASSWORD" \
-      "https://nexus.YOURCOMPANY.com/nexus/repository/thirdparty/de/hybris/platform/hybris-commerce-suite/$HYBRIS_VERSION/hybris-commerce-suite-$HYBRIS_VERSION.zip" \
-       -o "hybris-commerce-suite-$HYBRIS_VERSION.zip"
+	# download hybris
+	RUN curl --location --silent -u "USER:PASSWORD" \
+	"https://nexus.YOURCOMPANY.com/nexus/repository/thirdparty/de/hybris/platform/hybris-commerce-suite/$HYBRIS_VERSION/hybris-commerce-suite-$HYBRIS_VERSION.zip" \
+	-o "hybris-commerce-suite-$HYBRIS_VERSION.zip"
 
-  # if you get the zip from build context you can of course copy it into the buildcontainer directly
-  # COPY hybris-commerce-suite-"${HYBRIS_VERSION}".zip .
+	# if you get the zip from build context you can of course copy it into the buildcontainer directly
+	# COPY hybris-commerce-suite-"${HYBRIS_VERSION}".zip .
 
-  # add custom settings from build context (optional)
-  # COPY custom.properties installer/customconfig/custom.properties
+	# add custom settings from build context (optional)
+	# COPY custom.properties installer/customconfig/custom.properties
 
-  # build production zips
-  RUN unzip -qq hybris-commerce-suite-"${HYBRIS_VERSION}".zip \
-      && cd installer \
-      && chmod +x install.sh \
-      && ./install.sh -r b2c_acc \
-      && cd ../hybris/bin/platform \
-      && . ./setantenv.sh \
-      && ant clean all production
+	# build production zips
+	RUN unzip -qq hybris-commerce-suite-"${HYBRIS_VERSION}".zip \
+	&& cd installer \
+	&& chmod +x install.sh \
+	&& ./install.sh -r b2c_acc \
+	&& cd ../hybris/bin/platform \
+	&& . ./setantenv.sh \
+	&& ant clean all production
 
-  # build real image
-  FROM stefanlehmann/hybris-base-image:latest
-  COPY --from=buildcontainer /tmp/hybris/temp/hybris/hybrisServer/*.zip /home/hybris/
+	# build real image
+	FROM stefanlehmann/hybris-base-image:latest
+	COPY --from=buildcontainer /tmp/hybris/temp/hybris/hybrisServer/*.zip /home/hybris/
 
 ##### Build the image (still in docker dir created before)
 
