@@ -16,8 +16,12 @@ ARG VCS_REF
 LABEL org.label-schema.vcs-ref=$VCS_REF \
       org.label-schema.vcs-url="https://github.com/stefanleh/hybris-base-image"
 
+# accept the oracle java licence (must be done before install)
+echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
+
 # hybris needs unzip and lsof for the solr server setup
-RUN add-apt-repository ppa:webupd8team/java \
+RUN    apt-get update \ 
+    && add-apt-repository ppa:webupd8team/java \
     && apt-get update \ 
     && apt-get install -y oracle-java8-installer ca-certificates net-tools curl unzip lsof wget \
     && apt-get autoclean && apt-get --purge -y autoremove \
