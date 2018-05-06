@@ -1,36 +1,12 @@
-FROM ubuntu:latest
-MAINTAINER Stefan Lehmann <stefan.lehmann@oxaion.de>
+FROM ubuntu:latest as buildcontainer
 
-ENV VERSION 8
-ENV UPDATE 161
-ENV BUILD 12
-
-ENV GOSU_VERSION 1.9
-
-ENV JAVA_HOME /usr/lib/jvm/java-${VERSION}-oracle
-ENV JRE_HOME ${JAVA_HOME}/jre
-
-ARG HYBRIS_HOME=/home/hybris
-
-ARG VCS_REF
-LABEL org.label-schema.vcs-ref=$VCS_REF \
-      org.label-schema.vcs-url="https://github.com/stefanleh/hybris-base-image"
+ARG DEBIAN_FRONTEND=noninteractive
+ENV GOSU_VERSION 1.10
 
 # hybris needs unzip and lsof for the solr server setup
-RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates net-tools curl unzip lsof wget \
-    && curl --silent --location --retry 3 --cacert /etc/ssl/certs/GeoTrust_Global_CA.pem \
-       --header "Cookie: oraclelicense=accept-securebackup-cookie;" \
-       http://download.oracle.com/otn-pub/java/jdk/"${VERSION}"u"${UPDATE}"-b"${BUILD}"/2f38c3b165be4555a1fa6e98c45e0808/jdk-"${VERSION}"u"${UPDATE}"-linux-x64.tar.gz \
-       | tar xz -C /tmp \
-    && mkdir -p /usr/lib/jvm && mv /tmp/jdk1.${VERSION}.0_${UPDATE} "${JAVA_HOME}" \
-    && apt-get autoclean && apt-get --purge -y autoremove \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-# set oracle jre as default java
-RUN update-alternatives --install "/usr/bin/java" "java" "${JRE_HOME}/bin/java" 1 \
-    && update-alternatives --install "/usr/bin/javac" "javac" "${JAVA_HOME}/bin/javac" 1 \
-    && update-alternatives --set java "${JRE_HOME}/bin/java" \
-    && update-alternatives --set javac "${JAVA_HOME}/bin/javac"
+RUN    apt-get update \
+    && apt-get install -y --no-install-recommends ca-certificates wget \
+    && apt-get install -y --install-recommends dirmngr
 
 # grab gosu for easy step-down from root
 RUN set -x \
@@ -43,6 +19,33 @@ RUN set -x \
     && rm -r "$GNUPGHOME" /usr/local/bin/gosu.asc \
     && chmod +x /usr/local/bin/gosu \
     && gosu nobody true
+
+
+FROM ubuntu:latest
+MAINTAINER Stefan Lehmann <stefan.lehmann@oxaion.de>
+
+ARG HYBRIS_HOME=/home/hybris
+
+ARG VCS_REF
+LABEL org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.vcs-url="https://github.com/stefanleh/hybris-base-image"
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+# hybris needs the JAVA_HOME environment variable even if java is in path
+ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
+
+# hybris needs unzip and lsof for the solr server setup
+RUN    apt-get update \
+    && apt-get install -y --no-install-recommends software-properties-common apt-utils ca-certificates net-tools curl unzip lsof wget \
+    && add-apt-repository ppa:webupd8team/java \
+    && echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections \
+    && apt-get install -y oracle-java8-installer  \
+    && apt-get autoclean && apt-get --purge -y autoremove \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/cache/* /usr/lib/jvm/java-8-oracle/*src.zip
+
+# copy gosu from buildcontainer over
+COPY --from=buildcontainer /usr/local/bin/gosu /usr/local/bin/gosu
 
 # set the PLATFORM_HOME environment variable used by hybris
 ENV PLATFORM_HOME=${HYBRIS_HOME}/bin/platform/
