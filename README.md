@@ -1,3 +1,5 @@
+> This Docker Image is unmaintained at the moment as my current employer does not use SAP Hybris. As the access to current releases and documentation is restricted to people working for SAP Hybris parterns its not possible keep this project up to date. Therefore feel free to contact me if you like to maintain this project.
+
 ### hybris-base-image
 
 A base image for Hybris Commerce Suite, based on **ubuntu:latest**.
