@@ -1,7 +1,7 @@
 FROM ubuntu:latest as buildcontainer
 
 ARG DEBIAN_FRONTEND=noninteractive
-ENV GOSU_VERSION 1.10
+ENV GOSU_VERSION 1.11
 
 # hybris needs unzip and lsof for the solr server setup
 RUN    apt-get update \
