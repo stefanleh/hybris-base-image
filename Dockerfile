@@ -6,7 +6,7 @@ ENV GOSU_VERSION 1.11
 # hybris needs unzip and lsof for the solr server setup
 RUN    apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates wget \
-    && apt-get install -y --install-recommends dirmngr
+    && apt-get install -y --install-recommends gnupg2 dirmngr
 
 # grab gosu for easy step-down from root
 RUN set -x \
