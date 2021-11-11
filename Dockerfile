@@ -24,7 +24,7 @@ RUN set -x \
 
 
 FROM ubuntu:latest
-MAINTAINER Stefan Lehmann <stefan.lehmann@oxaion.de>
+MAINTAINER Stefan Lehmann <stefan.lehmann@isb-ag.de>
 
 ARG HYBRIS_HOME=/home/hybris
 
